@@ -101,6 +101,4 @@
             android:id="@+id/countdown_text"
             android:textSize="30sp" />
     </LinearLayout>
-
-
 </LinearLayout>
