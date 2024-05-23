@@ -1,14 +1,37 @@
-Tic Tac Toe Game
+# Android app Tic Tac Toe Game
 
-This is a simple Tic Tac Toe game implemented in Android. The game supports two modes: Player vs Player (PvP) and Player vs AI (PvAi).
+This is a simple implementation of the classic game Tic Tac Toe in Java for Android. The game features an AI player that uses the Minimax algorithm to determine its moves.
 
-Classes
-The game consists of three main classes:
-1. MainActivity: This is the main activity class that handles the game logic. It keeps track of the game state, handles button clicks, and updates the UI.
-2. ChooseGameMode: This class is an activity that allows the user to choose the game mode (PvP or PvAi).
-3. AiPlayer: This class represents the AI player in the PvAi mode. It decides the AI’s move based on the current state of the game board.
+## Classes
 
-How to Play
-When the game starts, the ChooseGameMode activity is launched. The user can choose to play in PvP mode or PvAi mode.
-In PvP mode, two players take turns to place their mark (either “X” or “O”) on the grid. The first player to get three of their marks in a row (vertically, horizontally, or diagonally) wins the game.
-In PvAi mode, the user plays against the AI. The AI chooses its move based on the current state of the game board. The AI’s strategy is to choose any open spot on the board.
+### AiPlayer
+
+The `AiPlayer` class is responsible for the logic of the AI player in the game. It has two main methods: `HardaiTurn` and `ExpertaiTurn`, which represent two difficulty levels for the AI player. Both methods use the Minimax algorithm to determine the best move for the AI player.
+
+The `HardaiTurn` method introduces some randomness to the AI's moves, making the game more unpredictable and challenging.
+
+The `ExpertaiTurn` method always chooses the move with the highest score according to the Minimax algorithm, making it a very tough opponent to beat.
+
+The `minimax` method is a private method used by both `HardaiTurn` and `ExpertaiTurn` to implement the Minimax algorithm. It recursively checks all possible moves and their outcomes to choose the best one.
+
+The `checkWinner` method is used to check the game board for a win or a draw.
+
+### ChooseGameMode
+
+The `ChooseGameMode` class is an `AppCompatActivity` that allows the user to choose between two game modes: Player vs Player (PvP) and Player vs AI (PvAI). The chosen game mode is then passed to the `MainActivity` class through an `Intent`.
+
+### MainActivity
+
+The `MainActivity` class is the main activity of the game. It handles the game logic, updates the game board, and keeps track of the players' scores. It also handles the game mode (Player vs Player or Player vs AI) and implements the game's countdown feature.
+
+## How to Run
+
+You can run this game on any Android device or emulator. Simply import the project into your preferred IDE (like Android Studio), build the project, and run it on your device or emulator.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request or open an issue.
+
+## License
+
+This project is licensed under the MIT License.
