@@ -8,11 +8,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
     // Declare the buttons for the Tic Tac Toe grid
-    private Button[] buttons = new Button[9];
+    private final Button[] buttons = new Button[9];
+    public String[][] field = new String[3][3];    // Create a 2D array to represent the game board
     private boolean player1Turn = true;     // Boolean to keep track of whose turn it is
     private int roundCount;                 // Integer to keep track of the number of rounds
     private int player1Points;              // Integers to keep track of the points for each player
@@ -71,55 +73,54 @@ public class MainActivity extends Activity implements View.OnClickListener {
             return;
         }
         // Set the text of the button based on whose turn it is
-        if(playerMode) {            //if player vs player
+        if (playerMode) {                   // player vs player mode
             if (player1Turn) {
                 ((Button) v).setText("X");
             } else {
                 ((Button) v).setText("O");
             }
-        }
-        else{                       //else if player vs ai
-            if (player1Turn) {
-                ((Button) v).setText("X");
-                player1Turn = false;
-                aiPlayerTurn();
-            }
-        }
-        // Increment the round count
-        roundCount++;
-
-        // Check if there's a win
-        if (checkForWin()) {
-            if(playerMode) {        //if player vs player
+            roundCount++;
+            if (checkForWin()) {
                 if (player1Turn) {
                     player1Wins();
                 } else {
                     player2Wins();
                 }
-            }else{                  //else if player vs ai
-                if (player1Turn) {
+            } else if (roundCount == 9) {   // If all buttons are clicked and there's no win, it's a draw
+                draw();
+            } else {                        // If there's no win and it's not a draw, switch the turn to the other player
+                player1Turn = !player1Turn;
+            }
+        } else {                             // player vs ai mode
+            if (player1Turn) {
+                ((Button) v).setText("X");
+                roundCount++;                // Increment the round count for player1
+                if (checkForWin()) {
                     player1Wins();
-                } else {
+                    return;
+                }
+                if (roundCount == 9)
+                    draw();                  // If all buttons are clicked and there's no win, it's a draw
+                player1Turn = false;
+                aiPlayerTurn();
+                roundCount++;                // Increment the round count for ai
+                if (checkForWin()) {
                     playerAiWins();
+                    return;
                 }
             }
-        } else if (roundCount == 9) {   // If all buttons are clicked and there's no win, it's a draw
-            draw();
-        } else {                        // If there's no win and it's not a draw, switch the turn to the other player
-            player1Turn = !player1Turn;
+               player1Turn = true;          // set player1 status to play
         }
     }
 
-    private void aiPlayerTurn(){
-        int e = ai.aiTurn(buttons);
-        buttons[e].setText("O");        //ai chooses a button at the eth element
+    private void aiPlayerTurn() {
+        int e = ai.aiTurn(field, 1);
+        if(e != -1)
+            buttons[e].setText("O");        //ai chooses a button at the eth element
     }
 
     // This method checks if there's a win
     private boolean checkForWin() {
-        // Create a 2D array to represent the game board
-        String[][] field = new String[3][3];
-
         // Fill the array with the current state of the game board
         // Convert the 1D index to 2D coordinates and get the text from the corresponding button
         // This text represents the current state of the cell (either "X", "O", or an empty string)
@@ -178,7 +179,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         startCountdown("Player 2 Wins!\n\n");
     }
 
-    private void playerAiWins(){
+    private void playerAiWins() {
         ai.playerAiPoint++;
         updatePointsText();
         startCountdown("Player Ai Wins!\n\n");
@@ -205,10 +206,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void updatePointsText() {
-        if(playerMode) {
+        if (playerMode) {
             textViewPlayer1.setText("Player 1: " + player1Points);
             textViewPlayer2.setText("Player 2: " + player2Points);
-        }else{
+        } else {
             textViewPlayer1.setText("Player 1: " + player1Points);
             textViewPlayer2.setText("Player Ai: " + ai.playerAiPoint);
         }
